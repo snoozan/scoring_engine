@@ -1,8 +1,8 @@
 import os
 import logging
 from flask import Flask
-
 from scoring_engine.config import config
+from scoring_engine.cache import cache
 
 
 app = Flask(__name__)
@@ -15,6 +15,8 @@ if not config.web_debug:
     log.setLevel(logging.ERROR)
 
 from scoring_engine.web.views import welcome, scoreboard, overview, services, admin, auth, profile, api, about
+
+cache.init_app(app)
 
 app.register_blueprint(welcome.mod)
 app.register_blueprint(scoreboard.mod)

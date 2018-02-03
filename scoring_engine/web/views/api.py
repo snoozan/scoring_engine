@@ -20,6 +20,7 @@ from scoring_engine.models.team import Team
 from scoring_engine.models.user import User
 from scoring_engine.models.setting import Setting
 from scoring_engine.engine.execute_command import execute_command
+from scoring_engine.cache import cache
 
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -379,6 +380,7 @@ def admin_get_engine_stats():
 
 
 @mod.route('/api/overview/get_data')
+@cache.memoize(30)
 def overview_get_data():
     blue_teams = session.query(Team).filter(Team.color == 'Blue').all()
     columns = []
@@ -412,6 +414,7 @@ def overview_get_data():
 
 
 @mod.route('/api/overview/get_round_data')
+@cache.memoize(30)
 def overview_get_round_data():
     round_obj = session.query(Round).order_by(Round.number.desc()).first()
     if round_obj:
@@ -506,6 +509,7 @@ def service_get_checks(id):
 
 
 @mod.route('/api/scoreboard/get_bar_data')
+@cache.memoize(30)
 def scoreboard_get_bar_data():
     team_data = {}
     team_labels = []
@@ -524,6 +528,7 @@ def scoreboard_get_bar_data():
 
 
 @mod.route('/api/scoreboard/get_line_data')
+@cache.memoize(30)
 def scoreboard_get_line_data():
     results = Team.get_all_rounds_results()
     team_data = {'team': {}, 'round': results['rounds']}
